@@ -2,6 +2,7 @@ package marioandweegee3.ml3api.registry;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -99,6 +101,18 @@ public class RegistryHelper {
 
     public void registerTileEntity(String name, TileEntityType<?> type) {
         registerBlockEntity(name, type);
+    }
+
+    public <T extends TileEntity> TileEntityType<T> registerAndCreateBlockEntity(String name, Supplier<T> blockEntity, Block... blocks){
+        TileEntityType<T> type = TileEntityType.Builder.create(blockEntity, blocks).build(null);
+        registerBlockEntity(name, type);
+        return type;
+    }
+
+    public <T extends TileEntity> TileEntityType<T> registerAndCreateTileEntity(String name, Supplier<T> tileEntity, Block... blocks){
+        TileEntityType<T> type = TileEntityType.Builder.create(tileEntity, blocks).build(null);
+        registerBlockEntity(name, type);
+        return type;
     }
 
     public void log(String message){
